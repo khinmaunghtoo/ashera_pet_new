@@ -1,0 +1,330 @@
+import 'dart:developer';
+
+import 'package:ashera_pet_new/enum/photo_type.dart';
+import 'package:ashera_pet_new/enum/ranking_list_type.dart';
+import 'package:ashera_pet_new/view_model/complaint_record.dart';
+import 'package:ashera_pet_new/view_model/report_vm.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
+import 'package:provider/provider.dart';
+import 'package:wechat_assets_picker/wechat_assets_picker.dart';
+
+import '../model/add_adopt_record_dto.dart';
+import '../model/complaint_record.dart';
+import '../model/tuple.dart';
+import '../utils/app_color.dart';
+import '../widget/new_post/image_picker.dart';
+import '../widget/text_field.dart';
+import 'cupertion_alert.dart';
+
+class ReportAlert extends StatefulWidget {
+  final AdoptRecordModel dto;
+  const ReportAlert({super.key, required this.dto});
+
+  @override
+  State<StatefulWidget> createState() => _ReportAlertState();
+}
+
+class _ReportAlertState extends State<ReportAlert> {
+  AdoptRecordModel get dto => widget.dto;
+  final TextEditingController _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+  ReportVm? _reportVm;
+  ComplaintRecordVm? _complaintRecordVm;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    log('檢舉事由：${dto.reason}');
+    _controller.text = dto.reason;
+  }
+
+  @override
+  void dispose() {
+    _reportVm!.clearMediaList();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _reportVm = Provider.of<ReportVm>(context);
+    _complaintRecordVm = Provider.of<ComplaintRecordVm>(context);
+    return Container(
+      width: 370,
+      height: 400,
+      decoration: BoxDecoration(
+          color: AppColor.itemBackgroundColor,
+          borderRadius: BorderRadius.circular(10)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          //title
+          _title(),
+          //line
+          _line(),
+          Expanded(
+              child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                //原因
+                Text.rich(TextSpan(
+                    text: '你已檢舉此用戶',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                    children: [
+                      TextSpan(
+                          text: '《${dto.reason}》',
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 20))
+                    ])),
+                //請上傳圖片佐證，供我們審查
+                const Text.rich(TextSpan(
+                    text: '請上傳圖片佐證，供我們審查',
+                    style: TextStyle(color: Colors.red, fontSize: 16))),
+                //Image
+                _image(),
+                //message
+                //_message(),
+                //button
+                _button(),
+              ],
+            ),
+          ))
+        ],
+      ),
+    );
+  }
+
+  Widget _title() {
+    return SizedBox(
+      width: 370,
+      height: 50,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(child: Container()),
+          Expanded(
+              child: Container(
+            alignment: Alignment.center,
+            child: const Text(
+              '檢舉',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          )),
+          Expanded(
+              child: Container(
+            padding: const EdgeInsets.only(right: 10),
+            alignment: Alignment.centerRight,
+            child: GestureDetector(
+              onTap: () => Navigator.of(context).pop(),
+              child: const Icon(
+                Icons.close,
+                size: 35,
+              ),
+            ),
+          ))
+        ],
+      ),
+    );
+  }
+
+  Widget _line() {
+    return Container(
+        height: 1, width: 370, color: AppColor.textFieldUnSelectBorder);
+  }
+
+  Widget _image() {
+    return Container(
+      width: 370,
+      alignment: Alignment.centerLeft,
+      child: Consumer<ReportVm>(
+        builder: (context, vm, _) {
+          if (vm.mediaList.isEmpty) {
+            return GestureDetector(
+              onTap: () async {
+                List<AssetEntity>? result = await pickAssets();
+                if (result != null) {
+                  vm.setMediaList(result);
+                }
+              },
+              child: Container(
+                height: 100,
+                width: 100,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white, width: 3)),
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
+            );
+          }
+          return SizedBox(
+            width: 100,
+            height: 100,
+            child: Stack(
+              alignment: Alignment.bottomLeft,
+              children: [
+                Container(
+                  height: 90,
+                  width: 90,
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 2, horizontal: 0),
+                  alignment: Alignment.center,
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: Image(
+                      fit: BoxFit.cover,
+                      image: MemoryImage(vm.mediaList.first.thumbnailData!),
+                    ),
+                  ),
+                ),
+                Positioned(
+                    top: 0,
+                    right: 0,
+                    child: GestureDetector(
+                      onTap: () async {
+                        bool r = await _isDeleteImage();
+                        if (r) {
+                          vm.deleteMediaList();
+                        }
+                      },
+                      child: const Icon(
+                        Icons.close,
+                        color: Colors.red,
+                        size: 20,
+                      ),
+                    ))
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _message() {
+    return CombinationTextField(
+      title: '檢舉內容',
+      isRequired: false,
+      child: ReportInputField(
+        controller: _controller,
+        focusNode: _focusNode,
+      ),
+    );
+  }
+
+  Widget _button() {
+    return GestureDetector(
+      onTap: () async {
+        if (_reportVm!.mediaList.isEmpty) {
+          SVProgressHUD.showError(status: '請選擇照片');
+          return;
+        }
+        if (_controller.text.trim().isEmpty) {
+          SVProgressHUD.showError(status: '請輸入檢舉內容');
+          return;
+        }
+
+        if (!_isLoading) {
+          _isLoading = true;
+          SVProgressHUD.show();
+          //上傳照片
+          Tuple<bool, String> r = await _reportVm!.uploadFile(dto.fromMember,
+              _reportVm!.mediaList.first.file!.path, PhotoType.report);
+          if (r.i1!) {
+            ComplaintRecordModel uploadDto = ComplaintRecordModel(
+                fromMemberId: dto.fromMemberId,
+                targetMemberId: dto.targetMemberId,
+                targetMember: dto.targetMember,
+                type: RankingListType.MESSAGE,
+                pic: r.i2!,
+                reason: _controller.text);
+            bool r1 = await _complaintRecordVm!.addComplaintRecord(uploadDto);
+            SVProgressHUD.dismiss();
+            _isLoading = false;
+            if (r1) {
+              Navigator.of(context).pop(true);
+            }
+          } else {
+            _isLoading = false;
+            SVProgressHUD.showError(status: '照片上傳失敗');
+          }
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 90),
+        decoration: BoxDecoration(
+            color: AppColor.button, borderRadius: BorderRadius.circular(5)),
+        child: const Text(
+          '送出',
+          style: TextStyle(color: Colors.white, fontSize: 16),
+        ),
+      ),
+    );
+  }
+
+  Future<List<AssetEntity>?> pickAssets() async {
+    late PermissionState ps;
+    try {
+      ps = await AssetPicker.permissionCheck();
+    } catch (e) {
+      ps = PermissionState.denied;
+    }
+    if (ps == PermissionState.denied) {
+      if (mounted) {
+        await showCupertinoAlert(
+          title: '提示',
+          content: '請至設定開啟相簿權限',
+          context: context,
+          cancel: false,
+          confirmation: true,
+        );
+      }
+      return null;
+    }
+
+    const int maxAssets = 1;
+    late final ThemeData theme = AssetPicker.themeData(AppColor.appBackground);
+
+    // use always same provider for `keepScrollOffset`
+    late final DefaultAssetPickerProvider provider = DefaultAssetPickerProvider(
+      maxAssets: maxAssets,
+      requestType: RequestType.image,
+    );
+
+    final InstaAssetPickerBuilder builder = InstaAssetPickerBuilder(
+      provider: provider,
+      initialPermission: ps,
+      pickerTheme: theme,
+      keepScrollOffset: false,
+      locale: const Locale('zh', 'TW'),
+    );
+    if (context.mounted) {
+      return await AssetPicker.pickAssetsWithDelegate(
+        context,
+        delegate: builder,
+      );
+    }
+    return null;
+  }
+
+  Future<bool> _isDeleteImage() async {
+    return await showCupertinoAlert(
+        context: context,
+        title: '刪除',
+        content: '確認要刪除此相片？',
+        cancel: true,
+        confirmation: true);
+  }
+}

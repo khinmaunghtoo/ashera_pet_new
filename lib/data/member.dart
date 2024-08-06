@@ -1,0 +1,12 @@
+import '../model/member.dart';
+
+class Member{
+  
+  // 当前登录用户 static 
+  static late MemberModel memberModel;
+
+  //*??????? 聊天对象？？？？
+  //*??????? 放这里???????
+  static MemberModel? nowChatMemberModel;
+
+}

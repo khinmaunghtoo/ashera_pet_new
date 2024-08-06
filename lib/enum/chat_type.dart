@@ -1,0 +1,4 @@
+enum ChatType{
+  GENERAL,
+  PET
+}
