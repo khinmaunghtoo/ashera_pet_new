@@ -281,8 +281,8 @@ class _SearchPetItemState extends State<SearchPetItem>
         double startLng = location['longitude'];
         double endLat = double.parse('${pet.latitude}');
         double endLng = double.parse('${pet.longitude}');
-        double m = getDistanceBetween(startLat, startLng, endLat, endLng);
-        return '${(m / 1000).toStringAsFixed(1)}km';
+        // double m = getDistanceBetween(startLat, startLng, endLat, endLng);
+        return '${(100 / 1000).toStringAsFixed(1)}km';
       }
       return '${0}km';
     }

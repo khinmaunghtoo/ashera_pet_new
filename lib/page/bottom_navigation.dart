@@ -196,9 +196,9 @@ class _BottomNavigationPageState extends State<BottomNavigationPage>
     _testFirebase();
 
     //位置權限
-    if (await GeolocatorService.handlePermission()) {
-      GeolocatorService.startDetectingPosition();
-    }
+    // if (await GeolocatorService.handlePermission()) {
+    //   GeolocatorService.startDetectingPosition();
+    // }
     _setFirebase();
   }
 
@@ -395,7 +395,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage>
     }
     _notificationStream?.cancel();
     _locationStream?.cancel();
-    GeolocatorService.cancel();
+    // GeolocatorService.cancel();
     super.dispose();
     WidgetsBinding.instance.removeObserver(this);
   }

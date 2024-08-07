@@ -8,8 +8,7 @@ import 'package:ashera_pet_new/enum/photo_type.dart';
 import 'package:ashera_pet_new/model/member_pet.dart';
 import 'package:ashera_pet_new/model/pet_classfication_dto.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart'
-    as c;
+// import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart' as c;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../data/auth.dart';
@@ -32,10 +31,10 @@ class MemberPetVm with ChangeNotifier {
   final Map<String, dynamic> _selfLatLng = {'latitude': 0.0, 'longitude': 0.0};
   Map<String, dynamic> get selfLatLng => _selfLatLng;
 
-  c.ClusterManager? _manager;
-  c.ClusterManager? get manager => _manager;
+  // c.ClusterManager? _manager;
+  // c.ClusterManager? get manager => _manager;
 
-  final List<Place> _item = [];
+  // final List<Place> _item = [];
 
   final Set<Marker> _marker = {};
   Set<Marker> get marker => _marker;
@@ -283,35 +282,35 @@ class MemberPetVm with ChangeNotifier {
     await Future.forEach(Pet.petModel, (element) async {
       if (element.longitude != 0.0 && element.latitude != 0.0) {
         if (element.mugshot.isNotEmpty) {
-          if (_item.where((item) => item.pet.id == element.id).isEmpty) {
-            _item.add(Place(
-                name: element.nickname,
-                pet: element,
-                latLng: LatLng(element.latitude.toDouble(),
-                    element.longitude.toDouble())));
-          }
+          // if (_item.where((item) => item.pet.id == element.id).isEmpty) {
+          //   _item.add(Place(
+          //       name: element.nickname,
+          //       pet: element,
+          //       latLng: LatLng(element.latitude.toDouble(),
+          //           element.longitude.toDouble())));
+          // }
         }
       }
     });
   }
 
   void initClusterManager(int mapId) async {
-    _manager = _initClusterManager();
-    _manager!.setMapId(mapId);
+    // _manager = _initClusterManager();
+    // _manager!.setMapId(mapId);
     await Future.delayed(
         const Duration(milliseconds: 500), () => _setItemToManager());
   }
 
   void _setItemToManager() {
-    _manager!.setItems(_item);
+    // _manager!.setItems(_item);
   }
 
-  c.ClusterManager _initClusterManager() {
-    return c.ClusterManager<Place>(_item, _updateMarkers,
-        markerBuilder: _markerBuilder,
-        //extraPercent: 3,
-        stopClusteringZoom: 16.5);
-  }
+  // c.ClusterManager _initClusterManager() {
+    // return c.ClusterManager<Place>(_item, _updateMarkers,
+    //     markerBuilder: _markerBuilder,
+    //     //extraPercent: 3,
+    //     stopClusteringZoom: 16.5);
+  // }
 
   void _updateMarkers(Set<Marker> markers) {
     _marker.clear();
@@ -320,7 +319,7 @@ class MemberPetVm with ChangeNotifier {
   }
 
   Future<Marker> Function(dynamic) get _markerBuilder => (cluster) async {
-        cluster as c.Cluster<Place>;
+        // cluster as c.Cluster<Place>;
         String token = Auth.userLoginResDTO.body.token;
         log('cluster: ${cluster.count} ${cluster.isMultiple}');
         return Marker(
@@ -332,8 +331,8 @@ class MemberPetVm with ChangeNotifier {
               } else {
                 log('多人');
                 _showBottomPet.clear();
-                await Future.forEach(cluster.items,
-                    (element) => _showBottomPet.add(element.pet));
+                // await Future.forEach(cluster.items,
+                //     (element) => _showBottomPet.add(element.pet));
                 _multiPersonBottomSheet();
               }
             },

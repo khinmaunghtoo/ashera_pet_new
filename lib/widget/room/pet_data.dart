@@ -310,7 +310,8 @@ class ChatRoomPetDataItem extends StatelessWidget {
         double startLng = location['longitude'];
         double endLat = double.parse('${pet.latitude}');
         double endLng = double.parse('${pet.longitude}');
-        double m = getDistanceBetween(startLat, startLng, endLat, endLng);
+        // double m = getDistanceBetween(startLat, startLng, endLat, endLng);
+        double m = 10;
         if (m <= 1000) {
           return '${m.toStringAsFixed(1)}m';
         } else {

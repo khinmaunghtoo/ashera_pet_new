@@ -354,7 +354,7 @@ class PostVm extends ChangeNotifier {
       if (json.decode(r.i2!)) {
         _postDataLike.removeWhere((element) => element.id == postLikeId);
       }
-      if (AppRouter.config.location == RouteName.bottomNavigation) {
+      if (AppRouter.currentLocation == RouteName.bottomNavigation) {
         notifyListeners();
       }
     }
@@ -492,7 +492,7 @@ class PostVm extends ChangeNotifier {
 
   void addNewPoseLike(PostLikeModel dto) {
     _postDataLike.add(dto);
-    if (AppRouter.config.location == RouteName.bottomNavigation) {
+    if (AppRouter.currentLocation == RouteName.bottomNavigation) {
       notifyListeners();
     }
   }

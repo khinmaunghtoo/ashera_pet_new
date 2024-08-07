@@ -57,7 +57,7 @@ class _PictureCarousalState extends State<PictureCarousal>
   }
 
   _listener() {
-    if (widget.inView && AppRouter.config.location == routeName) {
+    if (widget.inView && AppRouter.currentLocation == routeName) {
       _controller?.play();
     }
   }
@@ -127,7 +127,7 @@ class _PictureCarousalState extends State<PictureCarousal>
               return PostVideoWidget(
                   key: ValueKey('post-${widget.postCardData.id}'),
                   videoController: _controller,
-                  play: widget.inView && AppRouter.config.location == routeName,
+                  play: widget.inView && AppRouter.currentLocation == routeName,
                   controller: false,
                   volume: vm.volume,
                   isShare: false,

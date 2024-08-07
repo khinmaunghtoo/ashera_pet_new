@@ -10,8 +10,7 @@ import 'package:ashera_pet_new/utils/geolocator_service.dart';
 import 'package:ashera_pet_new/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart'
-    as c;
+// import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart' as c;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../data/auth.dart';
@@ -59,10 +58,10 @@ class KanBanVm extends ChangeNotifier {
   List<MemberPetLikeModel> get likeMes =>
       _likeMes.where((element) => element.iLike == true).toList();
 
-  c.ClusterManager? _manager;
-  c.ClusterManager? get manager => _manager;
+  // c.ClusterManager? _manager;
+  // c.ClusterManager? get manager => _manager;
 
-  final List<Place> _item = [];
+  // final List<Place> _item = [];
 
   final List<MemberPetModel> _showBottomPet = [];
   List<MemberPetModel> get showBottomPet => _showBottomPet;
@@ -236,7 +235,7 @@ class KanBanVm extends ChangeNotifier {
 
   void _setPet() {
     _marker.clear();
-    _item.clear();
+    // _item.clear();
     if (_status == FilterHealthStatus.all && _type == FilterAnimalType.all) {
       _pets.sort((f, l) {
         int compare = HealthStatus.values[f.healthStatus].sortIndex
@@ -309,10 +308,10 @@ class KanBanVm extends ChangeNotifier {
       notifyListeners();
     }
     _setMarker();
-    if (_manager != null) {
-      Future.delayed(
-          const Duration(milliseconds: 500), () => _manager!.updateMap());
-    }
+    // if (_manager != null) {
+    //   Future.delayed(
+    //       const Duration(milliseconds: 500), () => _manager!.updateMap());
+    // }
   }
 
   void _setMarker() async {
@@ -320,13 +319,13 @@ class KanBanVm extends ChangeNotifier {
       if (element.longitude != 0.0 && element.latitude != 0.0) {
         if (element.mugshot.isNotEmpty &&
             element.healthStatus != HealthStatus.healthy.index) {
-          if (_item.where((item) => item.pet.id == element.id).isEmpty) {
-            _item.add(Place(
-                name: element.nickname,
-                pet: element,
-                latLng: LatLng(element.latitude.toDouble(),
-                    element.longitude.toDouble())));
-          }
+          // if (_item.where((item) => item.pet.id == element.id).isEmpty) {
+          //   _item.add(Place(
+          //       name: element.nickname,
+          //       pet: element,
+          //       latLng: LatLng(element.latitude.toDouble(),
+          //           element.longitude.toDouble())));
+          // }
         }
       }
     });
@@ -518,26 +517,26 @@ class KanBanVm extends ChangeNotifier {
   }
 
   void initClusterManager(int mapId) async {
-    _manager = _initClusterManager();
-    _manager!.setMapId(mapId);
+    // _manager = _initClusterManager();
+    // _manager!.setMapId(mapId);
     await Future.delayed(
         const Duration(milliseconds: 500), () => _setItemToManager());
   }
 
   void _setItemToManager() {
-    _manager!.setItems(_item);
+    // _manager!.setItems(_item);
   }
 
-  c.ClusterManager _initClusterManager() {
-    return c.ClusterManager<Place>(
-      _item,
-      _updateMarkers,
-      markerBuilder: _markerBuilder,
-      //levels: [1],
-      //extraPercent: 0.9,
-      //stopClusteringZoom: 10.5
-    );
-  }
+  // c.ClusterManager _initClusterManager() {
+  //   return c.ClusterManager<Place>(
+  //     _item,
+  //     _updateMarkers,
+  //     markerBuilder: _markerBuilder,
+  //     //levels: [1],
+  //     //extraPercent: 0.9,
+  //     //stopClusteringZoom: 10.5
+  //   );
+  // }
 
   void _updateMarkers(Set<Marker> markers) {
     _marker.clear();
@@ -546,7 +545,7 @@ class KanBanVm extends ChangeNotifier {
   }
 
   Future<Marker> Function(dynamic) get _markerBuilder => (cluster) async {
-        cluster as c.Cluster<Place>;
+        // cluster as c.Cluster<Place>;
         String token = Auth.userLoginResDTO.body.token;
         log('cluster: ${cluster.location} ${cluster.count} ${cluster.isMultiple}');
         return Marker(
@@ -560,8 +559,8 @@ class KanBanVm extends ChangeNotifier {
               } else {
                 log('多人');
                 _showBottomPet.clear();
-                await Future.forEach(cluster.items,
-                    (element) => _showBottomPet.add(element.pet));
+                // await Future.forEach(cluster.items,
+                //     (element) => _showBottomPet.add(element.pet));
                 _multiPersonBottomSheet();
               }
             },
@@ -613,8 +612,8 @@ class KanBanVm extends ChangeNotifier {
     if (endLng != 0 && endLat != 0) {
       double startLat = _selfLatLng['latitude'];
       double startLng = _selfLatLng['longitude'];
-      double km = getDistanceBetween(startLat, startLng, endLat, endLng);
-      return km / 1000;
+      // double km = getDistanceBetween(startLat, startLng, endLat, endLng);
+      return 100 / 1000;
     } else {
       return 0;
     }

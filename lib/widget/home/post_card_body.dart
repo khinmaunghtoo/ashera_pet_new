@@ -43,8 +43,8 @@ class _PostCardBodyState extends State<PostCardBody> {
     if (imageUrl.isNotEmpty) {
       if (imageUrl.length <= 1) {
         if (Utils.videoFileVerification(imageUrl.first)) {
-          if (AppRouter.config.location == RouteName.bottomNavigation ||
-              AppRouter.config.location == RouteName.singlePost) {
+          if (AppRouter.currentLocation == RouteName.bottomNavigation ||
+              AppRouter.currentLocation == RouteName.singlePost) {
             _controller = CachedVideoPlayerPlusController.networkUrl(
               Uri.parse(
                 Utils.getFilePath(imageUrl.first),

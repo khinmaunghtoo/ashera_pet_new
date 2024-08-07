@@ -32,7 +32,7 @@ class PostCard extends StatelessWidget{
                 postCardData: postCardData,
                 isInView: isInView &&
                     vm.selectedTab == BottomTab.home &&
-                    AppRouter.config.location == RouteName.bottomNavigation || AppRouter.config.location == RouteName.singlePost,
+                    AppRouter.currentLocation == RouteName.bottomNavigation || AppRouter.currentLocation == RouteName.singlePost,
               );
             },),
           );

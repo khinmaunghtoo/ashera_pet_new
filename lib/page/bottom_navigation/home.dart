@@ -109,7 +109,7 @@ class _HomePageState extends State<HomePage>
                   builder: (context, list, _) {
                     //*? 為什麼會判斷這裡？ 判斷不是bottomNavigation?
                     // 不是bottomNavigation, 不可能來到這個頁面吧？
-                    if (AppRouter.config.location !=
+                    if (AppRouter.currentLocation !=
                         RouteName.bottomNavigation) {
                       log('回傳空畫面');
                       return Container();

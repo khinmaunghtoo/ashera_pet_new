@@ -136,7 +136,7 @@ class _CommentsPictureCarousalState extends State<CommentsPictureCarousal> {
                 key: ValueKey('post-${widget.postCardData.id}'),
                 videoController: _controller!,
                 play: widget.inView &&
-                    AppRouter.config.location == RouteName.comments,
+                    AppRouter.currentLocation == RouteName.comments,
                 controller: false,
                 volume: vm.volume,
                 isShare: false,

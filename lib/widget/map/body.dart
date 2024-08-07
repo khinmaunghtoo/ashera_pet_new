@@ -39,16 +39,16 @@ class _MapBodyState extends State<MapBody> {
                 vm.initClusterManager(controller.mapId);
               },
               onCameraMove: (position) {
-                if (vm.manager != null) {
-                  //log('onCameraMove: $position');
-                  vm.manager!.onCameraMove(position);
-                }
+                // if (vm.manager != null) {
+                //   //log('onCameraMove: $position');
+                //   vm.manager!.onCameraMove(position);
+                // }
               },
               onCameraIdle: () {
-                if (vm.manager != null) {
-                  //log('onCameraIdle');
-                  vm.manager!.updateMap();
-                }
+                // if (vm.manager != null) {
+                //   //log('onCameraIdle');
+                //   vm.manager!.updateMap();
+                // }
               },
               initialCameraPosition: CameraPosition(
                   target: LatLng(

@@ -193,7 +193,7 @@ class CommentsVm extends ChangeNotifier {
       if (json.decode(r.i2!)) {
         _postDataLike.removeWhere((element) => element.id == postLikeId);
       }
-      if (AppRouter.config.location == RouteName.comments) {
+      if (AppRouter.currentLocation == RouteName.comments) {
         notifyListeners();
       }
     }
@@ -201,7 +201,7 @@ class CommentsVm extends ChangeNotifier {
 
   void addNewPoseLike(PostLikeModel dto) {
     _postDataLike.add(dto);
-    if (AppRouter.config.location == RouteName.comments) {
+    if (AppRouter.currentLocation == RouteName.comments) {
       notifyListeners();
     }
   }
